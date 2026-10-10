@@ -1,0 +1,12 @@
+from skl2onnx import convert_sklearn
+from skl2onnx.common.data_types import FloatTensorType
+import onnx
+
+# Assuming 'model' is your trained XGBoost/Scikit-Learn model
+# Define the number of features your model expects (e.g., 2 features: payload size and IAT)
+initial_type = [("float_input", FloatTensorType([None, 2]))]
+onnx_model = convert_sklearn(model, initial_types=initial_type)
+
+# Save it as model.onnx in your project folder
+with open("model.onnx", "wb") as f:
+    f.write(onnx_model.SerializeToString())

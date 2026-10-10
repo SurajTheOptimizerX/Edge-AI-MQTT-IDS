@@ -1,0 +1,17 @@
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    container_name: local-mosquitto-broker
+    ports:
+      - "1883:1883"    # MQTT default port
+      - "9001:9001"    # MQTT over WebSockets port
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -t '$$SYS/#' -C 1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
